@@ -11,13 +11,25 @@ COPYRIGHT = "Copyright 2011 Brian Wigginton.\n"
 
 
 def main():
-    parser = optparse.OptionParser(usage="%prog [OPTIONS] [WATCH]", version="%prog " + VERSION + '\n\n' + COPYRIGHT)
+    parser = optparse.OptionParser(usage="%prog [OPTIONS] [WATCH]",
+                                    version="%prog " + VERSION +
+                                            '\n\n' + COPYRIGHT)
 
     # add options
-    parser.add_option("-c", "--clear", action="store_true", default=False, dest="clear_screen", help="clear the screen after each execution")
-    parser.add_option("-e", "--exec", dest="command", help="path to the program to execute")
-    parser.add_option("-i", "--interval", type="int", default="1", dest="interval", help="(in seconds) set the time interval to check for file modifications")
-    parser.add_option("--debug", action="store_true", default=False, dest="debug", help="enable debug output")
+    parser.add_option("-c", "--clear", action="store_true", default=False,
+                        dest="clear_screen",
+                        help="clear the screen after each execution")
+
+    parser.add_option("-e", "--exec", dest="command",
+                        help="path to the program to execute")
+
+    parser.add_option("-i", "--interval", type="int", default="1",
+                        dest="interval",
+                        help="(in seconds) set the time interval to check for\
+                            file modifications")
+
+    parser.add_option("--debug", action="store_true", default=False,
+                        dest="debug", help="enable debug output")
 
     # parse options
     (options, args) = parser.parse_args()
@@ -27,7 +39,7 @@ def main():
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("options: %s", options)
         logging.debug("args: %s", args)
-  
+
     # safety checks
     if len(args) != 1:
         parser.print_help()
@@ -47,14 +59,15 @@ def main():
             subprocess.call(["clear"])
 
         # if we're executing a file make sure it's actually executable
-        if os.path.isfile(cmd) and 64 != stat.S_IXUSR & os.stat(cmd)[stat.ST_MODE]:
-          logging.warning("Can't execute: %s", cmd)
-          exit()
-        
+        if (os.path.isfile(cmd) and
+            64 != stat.S_IXUSR & os.stat(cmd)[stat.ST_MODE]):
+                logging.warning("Can't execute: %s", cmd)
+                exit()
+
         # make sure we have a list
         if not isinstance(cmd, list):
-          cmd = cmd.split()
-  
+            cmd = cmd.split()
+
         logging.debug(cmd)
 
         return subprocess.call(cmd)
