@@ -58,10 +58,10 @@ def main():
             logging.debug("Clearing screen")
             subprocess.call(["clear"])
 
-        # if we're executing a file make sure it's actually executable
-        if (os.path.isfile(cmd) and
-            64 != stat.S_IXUSR & os.stat(cmd)[stat.ST_MODE]):
-                logging.warning("Can't execute: %s", cmd)
+        if os.path.isfile(cmd):
+            cmd = os.path.abspath(cmd)
+            if 64 != stat.S_IXUSR & os.stat(cmd)[stat.ST_MODE]:
+                logging.warning("Couldn't execute: %s", cmd)
                 exit()
 
         # make sure we have a list
